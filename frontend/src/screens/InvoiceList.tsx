@@ -25,9 +25,11 @@ const InvoiceList: React.FC = () => {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-gray-50 p-8">
-			<div className="flex justify-between items-center mb-6">
-				<h2 className="text-3xl font-bold text-gray-800">Invoices</h2>
+		<div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+			<div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+				<h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-0">
+					Invoices
+				</h2>
 				<Link
 					to="/"
 					className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
@@ -49,16 +51,16 @@ const InvoiceList: React.FC = () => {
 				<table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
 					<thead className="bg-gray-200">
 						<tr>
-							<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+							<th className="py-3 px-2 sm:px-6 text-left text-sm font-semibold text-gray-700">
 								Invoice Number
 							</th>
-							<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+							<th className="py-3 px-2 sm:px-6 text-left text-sm font-semibold text-gray-700">
 								Date
 							</th>
-							<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+							<th className="py-3 px-2 sm:px-6 text-left text-sm font-semibold text-gray-700">
 								Currency
 							</th>
-							<th className="py-3 px-6 text-center text-sm font-semibold text-gray-700">
+							<th className="py-3 px-2 sm:px-6 text-center text-sm font-semibold text-gray-700">
 								Actions
 							</th>
 						</tr>
@@ -85,16 +87,16 @@ const InvoiceList: React.FC = () => {
 						) : (
 							invoices.map((invoice) => (
 								<tr key={invoice.id} className="border-b">
-									<td className="py-4 px-6 text-sm text-gray-700">
+									<td className="py-4 px-2 sm:px-6 text-sm text-gray-700">
 										{invoice.number}
 									</td>
-									<td className="py-4 px-6 text-sm text-gray-700">
+									<td className="py-4 px-2 sm:px-6 text-sm text-gray-700">
 										{new Date(invoice.date).toLocaleDateString()}
 									</td>
-									<td className="py-4 px-6 text-sm text-gray-700">
+									<td className="py-4 px-2 sm:px-6 text-sm text-gray-700">
 										{invoice.currency}
 									</td>
-									<td className="py-4 px-6 text-center">
+									<td className="py-4 px-2 sm:px-6 text-center">
 										<div className="flex justify-center space-x-4">
 											<Link
 												to={`/edit/${invoice.id}`}

@@ -1,11 +1,10 @@
-// src/components/Invoice.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getInvoice } from "../api/api";
 import { FaPrint, FaHome, FaEdit } from "react-icons/fa";
 import { InvoiceData } from "../types";
 
-const Invoice: React.FC = () => {
+const Invoice = () => {
 	const { id } = useParams<{ id: string }>();
 	const [invoice, setInvoice] = useState<InvoiceData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -69,11 +68,13 @@ const Invoice: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50 p-8">
+		<div className="min-h-screen bg-gray-50 p-4 sm:p-6 md:p-8 lg:p-10">
 			{/* Header with Navigation */}
-			<div className="flex justify-between items-center mb-6">
-				<h2 className="text-3xl font-bold text-gray-800">Invoice Details</h2>
-				<div className="flex space-x-4">
+			<div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6">
+				<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-0">
+					Invoice Details
+				</h2>
+				<div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
 					<Link
 						to="/"
 						className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
@@ -96,18 +97,18 @@ const Invoice: React.FC = () => {
 			</div>
 
 			{/* Invoice Card */}
-			<div className="bg-white shadow-md rounded-lg p-6">
+			<div className="bg-white shadow-md rounded-lg p-4 sm:p-6 md:p-8">
 				{/* Invoice Header */}
-				<div className="flex justify-between items-center border-b pb-4 mb-6">
+				<div className="flex flex-col md:flex-row md:justify-between border-b pb-4 mb-6">
 					<div>
-						<h3 className="text-2xl font-semibold">
+						<h3 className="text-xl md:text-2xl font-semibold">
 							Invoice #{invoice.number}
 						</h3>
 						<p className="text-gray-600">
 							Date: {new Date(invoice.date).toLocaleDateString()}
 						</p>
 					</div>
-					<div className="text-right">
+					<div className="mt-4 md:mt-0 text-right">
 						<p className="text-gray-700 font-medium">
 							Currency: {invoice.currency}
 						</p>
@@ -119,19 +120,19 @@ const Invoice: React.FC = () => {
 					<table className="min-w-full bg-white">
 						<thead className="bg-gray-200">
 							<tr>
-								<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+								<th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">
 									Item Name
 								</th>
-								<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+								<th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">
 									Price
 								</th>
-								<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+								<th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">
 									Quantity
 								</th>
-								<th className="py-3 px-6 text-left text-sm font-semibold text-gray-700">
+								<th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">
 									Taxes
 								</th>
-								<th className="py-3 px-6 text-right text-sm font-semibold text-gray-700">
+								<th className="py-3 px-4 text-right text-sm font-semibold text-gray-700">
 									Total
 								</th>
 							</tr>
@@ -146,16 +147,16 @@ const Invoice: React.FC = () => {
 								const itemGrandTotal = itemTotal + itemTaxTotal;
 								return (
 									<tr key={item.id} className="border-b">
-										<td className="py-4 px-6 text-sm text-gray-700">
+										<td className="py-4 px-4 text-sm text-gray-700">
 											{item.name}
 										</td>
-										<td className="py-4 px-6 text-sm text-gray-700">
+										<td className="py-4 px-4 text-sm text-gray-700">
 											{item.price.toFixed(2)} {invoice.currency}
 										</td>
-										<td className="py-4 px-6 text-sm text-gray-700">
+										<td className="py-4 px-4 text-sm text-gray-700">
 											{item.quantity}
 										</td>
-										<td className="py-4 px-6 text-sm text-gray-700">
+										<td className="py-4 px-4 text-sm text-gray-700">
 											{item.taxes.map((tax, index) => (
 												<span key={tax.id}>
 													{tax.title} ({tax.rate}%)
@@ -163,7 +164,7 @@ const Invoice: React.FC = () => {
 												</span>
 											))}
 										</td>
-										<td className="py-4 px-6 text-sm text-gray-700 text-right">
+										<td className="py-4 px-4 text-sm text-gray-700 text-right">
 											{itemGrandTotal.toFixed(2)} {invoice.currency}
 										</td>
 									</tr>
@@ -174,7 +175,7 @@ const Invoice: React.FC = () => {
 				</div>
 
 				{/* Totals Section */}
-				<div className="flex justify-end mt-6">
+				<div className="flex flex-col md:flex-row justify-end mt-6">
 					<div className="w-full md:w-1/3">
 						<div className="flex justify-between mb-2">
 							<span className="text-gray-700">Subtotal:</span>

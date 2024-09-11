@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { z } from "zod";
 import { createInvoice, getInvoice, updateInvoice } from "../api/api";
@@ -27,13 +27,14 @@ const InvoiceSchema = z.object({
 
 type Invoice = z.infer<typeof InvoiceSchema>;
 
-const InvoiceForm: React.FC = () => {
+const InvoiceForm = () => {
 	const [invoice, setInvoice] = useState<Invoice>({
 		date: new Date().toISOString(),
 		number: "",
 		currency: "USD",
 		items: [],
 	});
+
 	const [errors, setErrors] = useState<any>({});
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
@@ -56,7 +57,6 @@ const InvoiceForm: React.FC = () => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		if (name === "date") {
-			// Convert the datetime-local value to ISO string
 			const date = new Date(value);
 			setInvoice({ ...invoice, [name]: date.toISOString() });
 		} else {
@@ -156,10 +156,10 @@ const InvoiceForm: React.FC = () => {
 	};
 
 	return (
-		<div className="min-h-screen bg-gray-50 p-8">
+		<div className="min-h-screen bg-gray-50 p-4 sm:p-8">
 			{/* Header with Home Link */}
 			<div className="flex justify-between items-center mb-6">
-				<h2 className="text-3xl font-bold text-gray-800">
+				<h2 className="text-xl sm:text-3xl font-bold text-gray-800">
 					{isEditMode ? "Edit Invoice" : "Create New Invoice"}
 				</h2>
 				<Link
@@ -172,9 +172,9 @@ const InvoiceForm: React.FC = () => {
 
 			<form
 				onSubmit={handleSubmit}
-				className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+				className="bg-white shadow-md rounded p-4 sm:px-8 sm:pt-6 sm:pb-8"
 			>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 					<div>
 						<label
 							htmlFor="date"
@@ -252,240 +252,248 @@ const InvoiceForm: React.FC = () => {
 				{/* Items Section */}
 				<div className="mt-8">
 					<div className="flex justify-between items-center mb-4">
-						<h3 className="text-2xl font-semibold text-gray-700">Items</h3>
+						<h3 className="text-lg sm:text-2xl font-semibold text-gray-700">
+							Items
+						</h3>
 						<button
 							type="button"
 							onClick={addItem}
-							className="flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded shadow transition duration-300"
+							className="flex items-center text-green-600 hover:text-green-800 font-medium"
 						>
 							<FaPlus className="mr-2" /> Add Item
 						</button>
 					</div>
 
-					{invoice.items.map((item, index) => (
+					{invoice.items.map((item, itemIndex) => (
 						<div
-							key={index}
-							className="bg-gray-100 p-4 rounded-md mb-6 shadow-inner"
+							key={itemIndex}
+							className="border border-gray-300 rounded-lg p-4 mb-6 bg-gray-50"
 						>
-							<div className="flex justify-between items-center mb-4">
-								<h4 className="text-lg font-medium text-gray-800">
-									Item {index + 1}
-								</h4>
-								<button
-									type="button"
-									onClick={() => removeItem(index)}
-									className="flex items-center bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded shadow transition duration-300"
-								>
-									<FaTrash className="mr-1" /> Remove
-								</button>
-							</div>
-
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-								{/* Item Name */}
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
 								<div>
-									<label className="block text-sm font-medium text-gray-700">
-										Name
+									<label
+										htmlFor={`item-name-${itemIndex}`}
+										className="block text-sm font-medium text-gray-700"
+									>
+										Item Name
 									</label>
 									<input
 										type="text"
+										id={`item-name-${itemIndex}`}
 										value={item.name}
 										onChange={(e) =>
-											handleItemChange(index, "name", e.target.value)
+											handleItemChange(itemIndex, "name", e.target.value)
 										}
 										className={`mt-1 block w-full border ${
-											errors.items?.[index]?.name
+											errors.items?.[itemIndex]?.name
 												? "border-red-500"
 												: "border-gray-300"
 										} rounded-md shadow-sm p-2`}
 									/>
-									{errors.items?.[index]?.name && (
+									{errors.items?.[itemIndex]?.name && (
 										<p className="text-red-500 text-sm mt-1">
-											{errors.items[index].name}
+											{errors.items[itemIndex].name}
 										</p>
 									)}
 								</div>
 
-								{/* Price */}
+								{/* Price and Quantity Fields */}
 								<div>
-									<label className="block text-sm font-medium text-gray-700">
+									<label
+										htmlFor={`item-price-${itemIndex}`}
+										className="block text-sm font-medium text-gray-700"
+									>
 										Price
 									</label>
 									<input
 										type="number"
+										id={`item-price-${itemIndex}`}
 										value={item.price}
 										onChange={(e) =>
 											handleItemChange(
-												index,
+												itemIndex,
 												"price",
 												parseFloat(e.target.value)
 											)
 										}
 										className={`mt-1 block w-full border ${
-											errors.items?.[index]?.price
+											errors.items?.[itemIndex]?.price
 												? "border-red-500"
 												: "border-gray-300"
 										} rounded-md shadow-sm p-2`}
 									/>
-									{errors.items?.[index]?.price && (
+									{errors.items?.[itemIndex]?.price && (
 										<p className="text-red-500 text-sm mt-1">
-											{errors.items[index].price}
+											{errors.items[itemIndex].price}
 										</p>
 									)}
 								</div>
 
-								{/* Quantity */}
 								<div>
-									<label className="block text-sm font-medium text-gray-700">
+									<label
+										htmlFor={`item-quantity-${itemIndex}`}
+										className="block text-sm font-medium text-gray-700"
+									>
 										Quantity
 									</label>
 									<input
 										type="number"
+										id={`item-quantity-${itemIndex}`}
 										value={item.quantity}
 										onChange={(e) =>
 											handleItemChange(
-												index,
+												itemIndex,
 												"quantity",
 												parseInt(e.target.value)
 											)
 										}
 										className={`mt-1 block w-full border ${
-											errors.items?.[index]?.quantity
+											errors.items?.[itemIndex]?.quantity
 												? "border-red-500"
 												: "border-gray-300"
 										} rounded-md shadow-sm p-2`}
 									/>
-									{errors.items?.[index]?.quantity && (
+									{errors.items?.[itemIndex]?.quantity && (
 										<p className="text-red-500 text-sm mt-1">
-											{errors.items[index].quantity}
+											{errors.items[itemIndex].quantity}
 										</p>
 									)}
 								</div>
 							</div>
 
 							{/* Taxes Section */}
-							<div className="mt-6">
-								<div className="flex justify-between items-center mb-2">
-									<h5 className="text-lg font-medium text-gray-700">Taxes</h5>
-									<button
-										type="button"
-										onClick={() => addTax(index)}
-										className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded shadow transition duration-300"
-									>
-										<FaPlus className="mr-1" /> Add Tax
-									</button>
-								</div>
-
+							<div className="mb-4">
+								<h4 className="text-sm font-semibold text-gray-700 mb-2">
+									Taxes
+								</h4>
 								{item.taxes.map((tax, taxIndex) => (
-									<div
-										key={taxIndex}
-										className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-4 bg-white p-3 rounded shadow"
-									>
-										{/* Tax Title */}
+									<div key={taxIndex} className="flex items-center gap-4 mb-2">
 										<div className="flex-1">
-											<label className="block text-sm font-medium text-gray-700">
-												Title
+											<label
+												htmlFor={`item-${itemIndex}-tax-title-${taxIndex}`}
+												className="block text-sm font-medium text-gray-700"
+											>
+												Tax Title
 											</label>
 											<input
 												type="text"
+												id={`item-${itemIndex}-tax-title-${taxIndex}`}
 												value={tax.title}
 												onChange={(e) =>
 													handleTaxChange(
-														index,
+														itemIndex,
 														taxIndex,
 														"title",
 														e.target.value
 													)
 												}
 												className={`mt-1 block w-full border ${
-													errors.items?.[index]?.taxes?.[taxIndex]?.title
+													errors.items?.[itemIndex]?.taxes?.[taxIndex]?.title
 														? "border-red-500"
 														: "border-gray-300"
 												} rounded-md shadow-sm p-2`}
 											/>
-											{errors.items?.[index]?.taxes?.[taxIndex]?.title && (
+											{errors.items?.[itemIndex]?.taxes?.[taxIndex]?.title && (
 												<p className="text-red-500 text-sm mt-1">
-													{errors.items[index].taxes[taxIndex].title}
+													{errors.items[itemIndex].taxes[taxIndex].title}
 												</p>
 											)}
 										</div>
 
-										{/* Tax Rate */}
-										<div className="flex-1 mt-4 md:mt-0">
-											<label className="block text-sm font-medium text-gray-700">
-												Rate (%)
+										<div className="flex-1">
+											<label
+												htmlFor={`item-${itemIndex}-tax-rate-${taxIndex}`}
+												className="block text-sm font-medium text-gray-700"
+											>
+												Tax Rate (%)
 											</label>
 											<input
 												type="number"
+												id={`item-${itemIndex}-tax-rate-${taxIndex}`}
 												value={tax.rate}
 												onChange={(e) =>
 													handleTaxChange(
-														index,
+														itemIndex,
 														taxIndex,
 														"rate",
 														parseFloat(e.target.value)
 													)
 												}
 												className={`mt-1 block w-full border ${
-													errors.items?.[index]?.taxes?.[taxIndex]?.rate
+													errors.items?.[itemIndex]?.taxes?.[taxIndex]?.rate
 														? "border-red-500"
 														: "border-gray-300"
 												} rounded-md shadow-sm p-2`}
 											/>
-											{errors.items?.[index]?.taxes?.[taxIndex]?.rate && (
+											{errors.items?.[itemIndex]?.taxes?.[taxIndex]?.rate && (
 												<p className="text-red-500 text-sm mt-1">
-													{errors.items[index].taxes[taxIndex].rate}
+													{errors.items[itemIndex].taxes[taxIndex].rate}
 												</p>
 											)}
 										</div>
 
 										{/* Remove Tax Button */}
-										<div className="mt-4 md:mt-0">
-											<button
-												type="button"
-												onClick={() => removeTax(index, taxIndex)}
-												className="flex items-center bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded shadow transition duration-300"
-											>
-												<FaTrash className="mr-1" /> Remove
-											</button>
-										</div>
+										<button
+											type="button"
+											onClick={() => removeTax(itemIndex, taxIndex)}
+											className="text-red-500 hover:text-red-700 mt-6"
+										>
+											<FaTrash />
+										</button>
 									</div>
 								))}
+								<button
+									type="button"
+									onClick={() => addTax(itemIndex)}
+									className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+								>
+									<FaPlus className="mr-2" /> Add Tax
+								</button>
 							</div>
+
+							{/* Remove Item Button */}
+							<button
+								type="button"
+								onClick={() => removeItem(itemIndex)}
+								className="text-red-500 hover:text-red-700"
+							>
+								<FaTrash className="mr-2 inline" />
+								Remove Item
+							</button>
 						</div>
 					))}
+				</div>
 
-					{/* Totals Section */}
-					<div className="bg-gray-200 p-4 rounded-md shadow-inner">
-						<h3 className="text-xl font-semibold text-gray-700 mb-4">Totals</h3>
-						<div className="flex justify-between mb-2">
-							<span className="text-gray-700">Subtotal:</span>
-							<span className="font-medium">
-								{calculateSubtotal().toFixed(2)} {invoice.currency}
-							</span>
-						</div>
-						<div className="flex justify-between mb-2">
-							<span className="text-gray-700">Taxes:</span>
-							<span className="font-medium">
-								{calculateTaxes().toFixed(2)} {invoice.currency}
-							</span>
-						</div>
-						<div className="flex justify-between">
-							<span className="text-gray-700 font-semibold">Total:</span>
-							<span className="font-semibold">
-								{calculateTotal().toFixed(2)} {invoice.currency}
-							</span>
-						</div>
+				{/* Invoice Totals */}
+				<div className="mt-8">
+					<div className="flex justify-between text-lg font-semibold text-gray-700">
+						<span>Subtotal:</span>
+						<span>
+							{calculateSubtotal().toFixed(2)} {invoice.currency}
+						</span>
 					</div>
+					<div className="flex justify-between text-lg font-semibold text-gray-700">
+						<span>Taxes:</span>
+						<span>
+							{calculateTaxes().toFixed(2)} {invoice.currency}
+						</span>
+					</div>
+					<div className="flex justify-between text-xl font-bold text-gray-900">
+						<span>Total:</span>
+						<span>
+							{calculateTotal().toFixed(2)} {invoice.currency}
+						</span>
+					</div>
+				</div>
 
-					{/* Submit Button */}
-					<div className="flex justify-end mt-6">
-						<button
-							type="submit"
-							className="flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded shadow transition duration-300"
-						>
-							{isEditMode ? "Update Invoice" : "Create Invoice"}
-						</button>
-					</div>
+				{/* Submit Button */}
+				<div className="mt-8 flex justify-end">
+					<button
+						type="submit"
+						className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+					>
+						{isEditMode ? "Update Invoice" : "Create Invoice"}
+					</button>
 				</div>
 			</form>
 		</div>

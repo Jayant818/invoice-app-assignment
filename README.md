@@ -64,5 +64,7 @@ A simple web application designed to manage invoices. It allows users to create,
 ## Technologies Used
 
 **Frontend**: React, Typescript , Zod , Tailwind CSS
+
 **Backend**: Node.js, Express , Typescript , Zod , Prisma
+
 **Database**: Postgres
