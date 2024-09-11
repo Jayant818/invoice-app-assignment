@@ -13,25 +13,25 @@ A simple web application designed to manage invoices. It allows users to create,
 
 ### Landing Page
 
-![Landing Page](/assets/image_1.png)
+![Landing Page](/assests/image_1.png)
 
 ### Invoice List Page
 
-![Invoice List Page](/assets/image.png)
+![Invoice List Page](/assests/image.png)
 
 ### Create/Edit Invoice Page
 
-![Create/Edit Invoice](/assets/image-1.png)
+![Create/Edit Invoice](/assests/image-1.png)
 
 ### Invoice Detail Page
 
-![Invoice Detail Page](/assets/image-2.png)
+![Invoice Detail Page](/assests/image-2.png)
 
 ## Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/invoice-app.git
+   git clone https://github.com/Jayant818/invoice-app-assignment.git
    ```
 2. Navigate into the project directory & install all dependencies:
 
